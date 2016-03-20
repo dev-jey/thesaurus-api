@@ -24,7 +24,7 @@ In python, the syntax is fairly simple.
 >>> print synonyms
 ['huge', 'enormous', 'full', 'immense', 'tremendous', 'hefty', 'fat', 'colossal', 'sizable', 'substantial', 'massive', 'gigantic', 'considerable', 'vast', 'ample', 'brimming', 'bulky', 'bull', 'burly', 'capacious', 'chock-full', 'commodious', 'copious', 'crowded', 'extensive', 'hulking', 'humongous', 'husky', 'jumbo', 'mammoth', 'monster', 'packed', 'ponderous', 'prodigious', 'roomy', 'spacious', 'strapping', 'stuffed', 'voluminous', 'whopper', 'whopping', 'awash', 'heavyweight', 'walloping', 'a whale of a', 'heavy-duty', 'mondo', 'oversize', 'super colossal', 'thundering']
 ```
-As you can see, this finds all of the synoyms for the word "big" and places them into a listâ€“ however, few of these synonyms are good fits for the word. In order to find the more relevant synonyms, you can use the function "findRankedSynonyms()". As an example:
+As you can see, this finds all of the synoyms for the word "big" and places them into a list– however, few of these synonyms are good fits for the word. In order to find the more relevant synonyms, you can use the function "findRankedSynonyms()". As an example:
 ```python
 >>> rankedSynonyms = findRankedSynonyms("big",3) # finds synonyms of rank 3.
 >>> print rankedSynonyms
@@ -46,4 +46,4 @@ I will soon make a findWord(inputWord) function that will return both synonyms a
 Also, there will be another function that allows you to search for the synonyms/antonyms of a different definition of the word you are searching for (right now those are hidden in different tabs, but I should be able to fix that by changing the beautifulsoup selector to div#synonyms-[1,2,3, etc.].
 
 ## Special Thanks
-To [James](https://github.com/jaykm/) for the idea to just use rstrip instead of something much more complicated to single-out a entry's relevanceLevel.
+To [James](https://github.com/jaykm/) for the idea to just use rstrip() instead of something much more complicated to single-out an entry's relevanceLevel.
