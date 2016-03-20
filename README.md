@@ -13,8 +13,8 @@ First, download the program.
 
 Next, navigate to its directory and launch python. 
 ```fish
-Prog Î» cd thesaurus-api/
-thesaurus-api:master* Î» python
+Prog λ cd thesaurus-api/
+thesaurus-api:master* λ python
 ```
 
 In python, the syntax is fairly simple.
