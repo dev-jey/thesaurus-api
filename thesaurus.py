@@ -75,7 +75,7 @@ def findRankedAntonyms(inputWord,rank):
         wordDict['ant3'] = []
         wordDict['ant2'] = []
         wordDict['ant1'] = []
-        wordTags = soup.select("span.text")
+        wordTags = soup.select("div#synonyms-0 section.container-info.antonyms div.list-holder ul.list li a span.text")
 
         for word in wordTags:
             relevanceLevel = word.parent.attrs["data-category"].rsplit("name\": \"")[1].rsplit("\",")[0]
@@ -110,9 +110,30 @@ def findSynonyms(inputWord):
 
         for word in wordTags:
             relevanceLevel = word.parent.attrs["data-category"].rsplit("name\": \"")[1].rsplit("\",")[0]
-            print(word.text + " " + str(relevanceLevel))
-            # if relevanceLevel == ("relevant-3" or "relevant-2" or "relevant-1"):
-            #     synonyms.append(str(word.text)) # using str() to remove unicode u''
+            # if relevanceLevel == "relevant-1":
+            #     print("***** - " + word.text + " " + str(relevanceLevel))
+            # else:
+            #     print(word.text + " " + str(relevanceLevel))
+            if (relevanceLevel == "relevant-3"):
+                # print(word.text)
+                synonyms.append(str(word.text)) # using str() to remove unicode u''
+            elif (relevanceLevel == "relevant-2"):
+                # print(word.text)
+                synonyms.append(str(word.text))
+            elif (relevanceLevel == "relevant-1"):
+                # print(word.text)
+                synonyms.append(str(word.text))
+            else:
+                """
+                Thanks to thesaurus.com's developers, there are sometimes up to
+                11 copies of given words. (Ex: search for /browse/baby on the
+                page for the word "big"). In order to combat this, I am stopping
+                the loop before it reaches the antonyms, as it repeats afterwards.
+
+                I may eventually change this to only select elements with background
+                colors or font weights, as the hidden words do not have any styles.
+                """
+                break
 
         return synonyms
 
@@ -129,33 +150,14 @@ def findAntonyms(inputWord):
         print(errorText)
     else:
         # initialize a list to hold all the antonyms
-        wordDict = {}
-        wordDict['ant3'] = []
-        wordDict['ant2'] = []
-        wordDict['ant1'] = []
-        wordTags = soup.select("span.text")
+        antonyms = []
+
+        wordTags = soup.select("div#synonyms-0 section.container-info.antonyms div.list-holder ul.list li a span.text")
 
         for word in wordTags:
             relevanceLevel = word.parent.attrs["data-category"].rsplit("name\": \"")[1].rsplit("\",")[0]
-            if relevanceLevel == "relevant--3":
-                wordDict['ant3'].append(str(word.text)) # using str() to remove unicode u''
-                # print(word.text)
-            elif relevanceLevel == "relevant--2":
-                wordDict['ant2'].append(str(word.text))
-                # print(word.text)
-            elif relevanceLevel == "relevant--1":
-                wordDict['ant1'].append(str(word.text))
-                # print(word.text)
+            # print(relevanceLevel + word.text)
+            if relevanceLevel == "relevant--3" or "relevant--2" or "relevant--1":
+                antonyms.append(str(word.text)) # using str() to remove unicode u''
 
-        return wordDict
-
-synonyms = findSynonyms("big")
-
-for word in synonyms:
-    print word
-
-# antonyms = findAntonyms("big")
-# print(antonyms)
-
-rankedSyn = findRankedSynonyms("big",1)
-print rankedSyn
+        return antonyms
