@@ -5,7 +5,7 @@ Greetings, and welcome to the unofficial api for thesaurus.com. A few of these f
 With the thesaurus-api, you are able to grab synonyms and antonyms from thesaurus.com. Thanks to the way the website highlights synonym/antonym entries in different colors according to their relevance, I have also included functions to grab certain ranks of syn/ant entries according to the level of relevance you require.
 
 ## License
-Everything in here is licensed under the MIT license. Do with it what you wantÃ¢â‚¬â€œ make yourself some money. Just don't get me involved.
+Everything in here is licensed under the MIT license. Do with it what you want– make some money. Just don't get me involved.
 
 ## Getting Started
 First, download the program.  
