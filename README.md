@@ -38,7 +38,26 @@ The antonyms follow the same syntax...
 >>> rankedAntonyms = findRankedAntonyms("big",3)
 >>> print rankedAntonyms
 ['miniature', 'teeny', 'tiny', 'insignificant', 'unimportant', 'impoverished', 'inconsiderable', 'little', 'minute', 'small', 'slight', 'thin', 'poor']
-```
+```  
+
+If you are looking for both the synonyms and antonyms of a word in all ranks, you can use findWord(). Ex:
+```python
+>>> from thesaurus import *
+>>> wordDict = findWord("big")
+>>> print wordDict
+{'ant1': ['blah', 'adolescent', 'baby', 'babyish', 'infantile', 'juvenile', 'selfish', 'ungenerous', 'bland', 'dull', 'infant', 'ungiving', 'humble', 'shy', 'unconfident', 'itsy'], 'ant3': ['miniature', 'teeny', 'tiny', 'insignificant', 'unimportant', 'impoverished', 'inconsiderable', 'little', 'minute', 'small', 'slight', 'thin', 'poor'], 'ant2': [], 'syn2': [], 'syn3': ['huge', 'enormous', 'full', 'immense', 'tremendous', 'hefty', 'fat', 'colossal', 'sizable', 'substantial', 'massive', 'gigantic', 'considerable', 'vast'], 'syn1': ['ample', 'brimming', 'bulky', 'bull', 'burly', 'capacious', 'chock-full', 'commodious', 'copious', 'crowded', 'extensive', 'hulking', 'humongous', 'husky', 'jumbo', 'mammoth', 'monster', 'packed', 'ponderous', 'prodigious', 'roomy', 'spacious', 'strapping', 'stuffed', 'voluminous', 'whopper', 'whopping', 'awash', 'heavyweight', 'walloping', 'a whale of a', 'heavy-duty', 'mondo', 'oversize', 'super colossal', 'thundering']}  
+```  
+
+Or, if you have a certain word element in mind:
+```python
+>>> wordDict = findWord("big")['syn1']
+>>> print wordDict
+['ample', 'brimming', 'bulky', 'bull', 'burly', 'capacious', 'chock-full', 'commodious', 'copious', 'crowded', 'extensive', 'hulking', 'humongous', 'husky', 'jumbo', 'mammoth', 'monster', 'packed', 'ponderous', 'prodigious', 'roomy', 'spacious', 'strapping', 'stuffed', 'voluminous', 'whopper', 'whopping', 'awash', 'heavyweight', 'walloping', 'a whale of a', 'heavy-duty', 'mondo', 'oversize', 'super colossal', 'thundering']
+```  
+
+Though, if you are just looking for one element, it would be faster to use `findRankedSynonyms("big",1)`  
+
+If you would prefer a dictionary of synonyms or antonyms organized by rank (rather than a jumbled list), you can use `findWordType("big","syn")`, `findWordType("big","ant")`, or `findWordType("big","all")`. The last of these, wherein type is "all"– is the same as using `findWord()`, though the latter is faster.  
 
 ## Coming Soon
 I will soon make a findWord(inputWord) function that will return both synonyms and antonyms of individual ranks into a dictionary.
