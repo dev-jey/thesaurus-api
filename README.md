@@ -60,9 +60,9 @@ Though, if you are just looking for one element, it would be faster to use `find
 If you would prefer a dictionary of synonyms or antonyms organized by rank (rather than a jumbled list), you can use `findWordType("big","syn")`, `findWordType("big","ant")`, or `findWordType("big","all")`. The last of these, wherein type is "all"– is the same as using `findWord()`, though the latter is faster.  
 
 ## Coming Soon
-I will soon make a findWord(inputWord) function that will return both synonyms and antonyms of individual ranks into a dictionary.
+~~Make a findWord(inputWord) function that will return both synonyms and antonyms of individual ranks into a dictionary.~~
 
-Also, there will be another function that allows you to search for the synonyms/antonyms of a different definition of the word you are searching for (right now those are hidden in different tabs, but I should be able to fix that by changing the beautifulsoup selector to div#synonyms-[1,2,3, etc.].
+A Function that allows you to search for the synonyms/antonyms of a different definition of the word you are searching for (right now those are hidden in different tabs, but I should be able to fix that by changing the beautifulsoup selector to div#synonyms-[1,2,3, etc.].
 
 ## Special Thanks
 To [James](https://github.com/jaykm/) for the idea to just use rstrip() instead of something much more complicated to single-out an entry's relevanceLevel.

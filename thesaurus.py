@@ -307,3 +307,80 @@ def cleanInput(inputString):
     inputString = inputString.lower()
 
     return inputString
+
+def findWordTotal(inputWord):
+    # set up the soup of beauty
+    url = "http://www.thesaurus.com/browse/" + inputWord
+    r = requests.get(url)
+    soup = BeautifulSoup(r.content, "html.parser")
+
+    # check to see if there are actually synonyms for the entry.
+    errorTag = soup.select("#words-gallery-no-results")
+    if errorTag != []:
+        errorText = [item.text for item in errorTag][0]
+        print(errorText)
+    else:
+        wordDict = {}
+        wordDict['partOfSpeech'] = []
+        wordDict['meaning'] = []
+
+        tabTags = soup.select("div.mask ul li")
+        for item in tabTags:
+            wordDict['partOfSpeech'].append(str(item.select("em.txt")[0].text)) # adj, adv, noun, etc.
+            wordDict['meaning'].append(str(item.select("strong.ttl")[0].text)) # word meaning
+
+        for x in xrange(0,len(wordDict['meaning'])):
+            # print wordDict['partOfSpeech'][x] + ": " + wordDict['meaning'][x]
+
+            # MAKE THE DICT!
+            wordDict[str(x)] = {}
+            wordDict[str(x)]['partOfSpeech'] = wordDict['partOfSpeech'][x]
+            wordDict[str(x)]['meaning'] = wordDict['meaning'][x]
+            wordDict[str(x)]['syn3'] = []
+            wordDict[str(x)]['syn2'] = []
+            wordDict[str(x)]['syn1'] = []
+            wordDict[str(x)]['ant3'] = []
+            wordDict[str(x)]['ant2'] = []
+            wordDict[str(x)]['ant1'] = []
+
+            # GET THE DATA!
+            # antonyms
+            wordTags = soup.select("div#synonyms-" + str(x) + " section.container-info.antonyms div.list-holder ul.list li a span.text")
+            for word in wordTags:
+                relevanceLevel = word.parent.attrs["data-category"].rsplit("name\": \"")[1].rsplit("\",")[0]
+                if relevanceLevel == "relevant--3":
+                    wordDict[str(x)]['ant3'].append(str(word.text)) # using str() to remove unicode u''
+                    # print(word.text)
+                elif relevanceLevel == "relevant--2":
+                    wordDict[str(x)]['ant2'].append(str(word.text))
+                    # print(word.text)
+                elif relevanceLevel == "relevant--1":
+                    wordDict[str(x)]['ant1'].append(str(word.text))
+                    # print(word.text)
+
+
+
+            #synonyms
+            wordTags = soup.select("div#synonyms-" + str(x) + " div#filters-0 div.relevancy-block div.relevancy-list ul li a span.text")
+            for word in wordTags:
+                relevanceLevel = word.parent.attrs["data-category"].rsplit("name\": \"")[1].rsplit("\",")[0]
+                if relevanceLevel == "relevant-3":
+                    wordDict[str(x)]['syn3'].append(str(word.text)) # using str() to remove unicode u''
+                    # print(word.text)
+                elif relevanceLevel == "relevant-2":
+                    wordDict[str(x)]['syn2'].append(str(word.text))
+                    # print(word.text)
+                elif relevanceLevel == "relevant-1":
+                    wordDict[str(x)]['syn1'].append(str(word.text))
+                    # print(word.text)
+
+        del wordDict['partOfSpeech']
+        del wordDict['meaning']
+
+        # ===========================   BEGIN DEBUGGING   ======================
+        # for x in xrange(0,len(wordDict)):
+        #     print("\n" + str(x) + ":")
+        #     print wordDict[str(x)]
+        # ============================   END DEBUGGING   =======================
+
+        return wordDict
