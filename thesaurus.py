@@ -384,3 +384,42 @@ def findWordTotal(inputWord):
         # ============================   END DEBUGGING   =======================
 
         return wordDict
+
+def findExamples(inputWord):
+    # set up the soup of beauty
+    url = "http://www.thesaurus.com/browse/" + inputWord
+    r = requests.get(url)
+    soup = BeautifulSoup(r.content, "html.parser")
+
+    # check to see if there are actually synonyms for the entry.
+    errorTag = soup.select("#words-gallery-no-results")
+    if errorTag != []:
+        errorText = [item.text for item in errorTag][0]
+        print(errorText)
+    else:
+        examples = []
+
+        exampleTag = soup.select("div#example-sentences div p")
+        for item in exampleTag:
+            examples.append(str(item.text.replace("\n","").replace("\r","").replace("        ","").replace("    ","")))
+
+        return examples
+
+def findOrigin(inputWord):
+    # set up the soup of beauty
+    url = "http://www.thesaurus.com/browse/" + inputWord
+    r = requests.get(url)
+    soup = BeautifulSoup(r.content, "html.parser")
+
+    # check to see if there are actually synonyms for the entry.
+    errorTag = soup.select("#words-gallery-no-results")
+    if errorTag != []:
+        errorText = [item.text for item in errorTag][0]
+        print(errorText)
+    else:
+        originTag = soup.select("div#word-origin div p")
+        origin = [str(item.text.replace("\n","").replace("\r","").replace("        ","").replace("    ","")) for item in originTag][0]
+        # origin = []
+        # for item in exampleTag:
+        #     examples.append(str(item.text.replace("\n","").replace("\r","").replace("        ","").replace("    ","")))
+        return origin
