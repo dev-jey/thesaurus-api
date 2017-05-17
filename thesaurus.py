@@ -408,71 +408,53 @@ def findWordTotal(inputWord):
     if errorTag != []:
         errorText = [item.text for item in errorTag][0]
         print(errorText)
+        return {}
     else:
-        wordDict = {}
-        wordDict['partOfSpeech'] = []
-        wordDict['meaning'] = []
+        # No errors. Let the show go on.
+        pass
 
-        tabTags = soup.select("div.mask ul li")
-        for item in tabTags:
-            wordDict['partOfSpeech'].append(str(item.select("em.txt")[0].text)) # adj, adv, noun, etc.
-            wordDict['meaning'].append(str(item.select("strong.ttl")[0].text)) # word meaning
+    # initialize a dictionary to hold all the antonyms
+    wordDict = {}
 
-        for x in xrange(0,len(wordDict['meaning'])):
-            # print wordDict['partOfSpeech'][x] + ": " + wordDict['meaning'][x]
+    # find the different parts of speech, and their meanings.
+    posTags = soup.select("div.mask a.pos-tab")
+    definitionCount =  len(posTags)
+    for item in posTags:
+        """The number of the item is stored in its data-id.
+        Its POS is in the <em.txt> below it.
+        Its meaning is in the <strong.ttl> also below it.
+        """
+        definitionNumber = str(item['data-id'])  # 0, 1, 2, etc.
+        wordDict[definitionNumber] = {}
+        wordDict[definitionNumber]['partOfSpeech'] = [
+            word.text for word in item.select('em')][0]
+        wordDict[definitionNumber]['meaning'] = [
+            word.text for word in item.select('strong')][0]
 
-            # MAKE THE DICT!
-            wordDict[str(x)] = {}
-            wordDict[str(x)]['partOfSpeech'] = wordDict['partOfSpeech'][x]
-            wordDict[str(x)]['meaning'] = wordDict['meaning'][x]
-            wordDict[str(x)]['syn3'] = []
-            wordDict[str(x)]['syn2'] = []
-            wordDict[str(x)]['syn1'] = []
-            wordDict[str(x)]['ant3'] = []
-            wordDict[str(x)]['ant2'] = []
-            wordDict[str(x)]['ant1'] = []
+    # Find the synonyms and antonyms for each definition.
+    for x in xrange(0,definitionCount):
+        # x corresponds to the current number of the definition.
+        for y in xrange(-3,3+1):
+            if y < 0:
+                wordDict[str(x)]['ant'+str(abs(y))] = []
+            elif y > 0:
+                wordDict[str(x)]['syn'+str(y)] = []
 
-            # GET THE DATA!
-            # antonyms
-            wordTags = soup.select("div#synonyms-" + str(x) + " section.container-info.antonyms div.list-holder ul.list li a span.text")
-            for word in wordTags:
-                relevanceLevel = word.parent.attrs["data-category"].rsplit("name\": \"")[1].rsplit("\",")[0]
-                if relevanceLevel == "relevant--3":
-                    wordDict[str(x)]['ant3'].append(str(word.text)) # using str() to remove unicode u''
-                    # print(word.text)
-                elif relevanceLevel == "relevant--2":
-                    wordDict[str(x)]['ant2'].append(str(word.text))
-                    # print(word.text)
-                elif relevanceLevel == "relevant--1":
-                    wordDict[str(x)]['ant1'].append(str(word.text))
-                    # print(word.text)
+        # synonyms
+        wordTags = soup.select("div#synonyms-"+str(x)+" div#filters-"+str(x)+" div.relevancy-block div.relevancy-list ul li a span.text")
+        for word in wordTags:
+            relevanceLevel = word.parent.attrs["data-category"].rsplit("name\": \"")[1].rsplit("\",")[0]
+            relevanceNumber = relevanceLevel[len(relevanceLevel)-1] # end char is the number
+            wordDict[str(x)]['syn'+relevanceNumber].append(str(word.text))
 
+        # antonyms
+        wordTags = soup.select("div#synonyms-"+str(x)+" section.container-info.antonyms div.list-holder ul.list li a span.text")
+        for word in wordTags:
+            relevanceLevel = word.parent.attrs["data-category"].rsplit("name\": \"")[1].rsplit("\",")[0]
+            relevanceNumber = relevanceLevel[len(relevanceLevel)-1] # end char is the number
+            wordDict[str(x)]['ant'+relevanceNumber].append(str(word.text))
 
-
-            #synonyms
-            wordTags = soup.select("div#synonyms-" + str(x) + " div#filters-0 div.relevancy-block div.relevancy-list ul li a span.text")
-            for word in wordTags:
-                relevanceLevel = word.parent.attrs["data-category"].rsplit("name\": \"")[1].rsplit("\",")[0]
-                if relevanceLevel == "relevant-3":
-                    wordDict[str(x)]['syn3'].append(str(word.text)) # using str() to remove unicode u''
-                    # print(word.text)
-                elif relevanceLevel == "relevant-2":
-                    wordDict[str(x)]['syn2'].append(str(word.text))
-                    # print(word.text)
-                elif relevanceLevel == "relevant-1":
-                    wordDict[str(x)]['syn1'].append(str(word.text))
-                    # print(word.text)
-
-        del wordDict['partOfSpeech']
-        del wordDict['meaning']
-
-        # ===========================   BEGIN DEBUGGING   ======================
-        # for x in xrange(0,len(wordDict)):
-        #     print("\n" + str(x) + ":")
-        #     print wordDict[str(x)]
-        # ============================   END DEBUGGING   =======================
-
-        return wordDict
+    return wordDict
 
 def findExamples(inputWord):
     """Find example sentences for a word.
@@ -525,67 +507,6 @@ def findOrigin(inputWord):
         #     examples.append(str(item.text.replace("\n","").replace("\r","").replace("        ","").replace("    ","")))
         return origin
 
-def getWord(inputWord):
-    """Grab all data, across all definitions and parts of speech for a word.
-    A current downside is that the data isn't all that organized.
-    """
-    url = "http://www.thesaurus.com/browse/" + inputWord
-    r = requests.get(url)
-    soup = BeautifulSoup(r.content, "html.parser")
-
-    # check to see if there are actually synonyms for the entry.
-    errorTag = soup.select("#words-gallery-no-results")
-    if errorTag != []:
-        errorText = [item.text for item in errorTag][0]
-        print(errorText)
-        return None
-    else:
-        # No errors. Let the show go on.
-        pass
-
-    # initialize a dictionary to hold all the antonyms
-    wordDict = {}
-
-    # find the different parts of speech, and their meanings.
-    posTags = soup.select("div.mask a.pos-tab")
-    definitionCount =  len(posTags)
-    for item in posTags:
-        """The number of the item is stored in its data-id.
-        Its POS is in the <em.txt> below it.
-        Its meaning is in the <strong.ttl> also below it.
-        """
-        definitionNumber = str(item['data-id'])  # 0, 1, 2, etc.
-        wordDict[definitionNumber] = {}
-        wordDict[definitionNumber]['partOfSpeech'] = [
-            word.text for word in item.select('em')][0]
-        wordDict[definitionNumber]['meaning'] = [
-            word.text for word in item.select('strong')][0]
-
-    # Find the synonyms and antonyms for each definition.
-    for x in xrange(0,definitionCount):
-        # x corresponds to the current number of the definition.
-        for y in xrange(-3,3+1):
-            if y < 0:
-                wordDict[str(x)]['ant'+str(abs(y))] = []
-            elif y > 0:
-                wordDict[str(x)]['syn'+str(y)] = []
-
-        # synonyms
-        wordTags = soup.select("div#synonyms-"+str(x)+" div#filters-"+str(x)+" div.relevancy-block div.relevancy-list ul li a span.text")
-        for word in wordTags:
-            relevanceLevel = word.parent.attrs["data-category"].rsplit("name\": \"")[1].rsplit("\",")[0]
-            relevanceNumber = relevanceLevel[len(relevanceLevel)-1] # end char is the number
-            wordDict[str(x)]['syn'+relevanceNumber].append(str(word.text))
-
-        # antonyms
-        wordTags = soup.select("div#synonyms-"+str(x)+" section.container-info.antonyms div.list-holder ul.list li a span.text")
-        for word in wordTags:
-            relevanceLevel = word.parent.attrs["data-category"].rsplit("name\": \"")[1].rsplit("\",")[0]
-            relevanceNumber = relevanceLevel[len(relevanceLevel)-1] # end char is the number
-            wordDict[str(x)]['ant'+relevanceNumber].append(str(word.text))
-
-    return wordDict
-
 """
 It has come to my attention that I have a lot of functions in this library,
 all with names that bear little resemblence to their functionality. In other
@@ -614,34 +535,3 @@ The functions I need:
 Get ALL the data for a specific word (no matter how many requests).
     - word complexity, relevancy, length
 """
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#
