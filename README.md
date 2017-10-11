@@ -11,7 +11,6 @@ Within the thesaurus class's primary class, `Word`, there are four functions:
 - `Word.examples()` : returns sentences showing how the word is used.  
 
 More information is provided about these functions in the *Getting Started* section below.  
-**Note**: This module has changed a lot recently. If you used thesaurus-api before I added the `Word` class, the old functions were moved to `old.py`, and the documentation for that can be found in `old tutorial.md`. Once some time has passed, and I know for certain the new stuff works well, I will most likely delete the older version. Read: use the new stuff.
 
 ## License
 Everything in here is licensed under the MIT license. Do with it what you want– make some money. Just don't get me involved.
