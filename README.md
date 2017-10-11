@@ -1,5 +1,5 @@
 # Thesaurus-API
-Greetings, and welcome to the unofficial api for thesaurus.com. A few of these functions were originally written for an [acronym creator](https://github.com/Manwholikespie/backronym), however I figured other people might want to pull data from thesaurus.com.
+Greetings, and welcome to the unofficial api for thesaurus.com. It is compatible with Python 2 and 3. A few of these functions were originally written for an [acronym creator](https://github.com/Manwholikespie/backronym), however I figured other people might want to pull data from thesaurus.com.
 
 ## Introduction
 With the thesaurus-api, you are able to grab synonyms and antonyms from thesaurus.com. Thanks to the way the website highlights synonym/antonym entries in different colors according to their relevance, I have also included functions to grab certain ranks of syn/ant entries according to the level of relevance you require.
@@ -231,9 +231,11 @@ u'kettle O.E. cetil (Mercian), from L. catillus "deep pan or dish for cooking," 
 
 ~~Make a class that allows us to call anything we want from it more easily. I want to just specify a word class with the only input being the word, and then call word.synonyms, word.origin, etc.~~
 
+~~Come up with a more organized way of naming the functions so that I don't confuse people.~~
+
 In addition to having a ['meaning'] part of each definition's dictionary when using findWordTotal, add a ['nltk meaning'] section so that it plays nicely with nltk's part-of-speech tagger.
 
-Come up with a more organized way of naming the functions so that I don't confuse people.
+Add automated tests and badges to show supported versions of Python, and detect any errors.
 
 ## Special Thanks
 To [James](https://github.com/jaykm/) for the idea to just use rstrip() instead of something much more complicated to single-out an entry's relevanceLevel.
