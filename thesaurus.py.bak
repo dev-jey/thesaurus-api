@@ -31,10 +31,10 @@ def fetchWordData(inputWord):
 
     # part of speech and meaning
     posTags = soup.select("div.mask a.pos-tab")
-    pos = [[z.text for z in x.select('em')][0] for x in posTags]
-    meaning = [[z.text for z in x.select('strong')][0] for x in posTags]
+    pos = map(lambda x: [z.text for z in x.select('em')][0], posTags)
+    meaning = map(lambda x: [z.text for z in x.select('strong')][0], posTags)
 
-    for defnNum in range(0, definitionCount):
+    for defnNum in xrange(0, definitionCount):
         wordPath = 'div#synonyms-{} li a'
         data = soup.select(wordPath.format(defnNum))
 
@@ -74,7 +74,7 @@ def fetchWordData(inputWord):
         defns.append(curr_def)
 
     # add origin and examples to the last element so we can .pop() it out later
-    clean = lambda x: x.strip().replace('\u201d', '"').replace('\u201c', '"')
+    clean = lambda x: x.strip().replace(u'\u201d', '"').replace(u'\u201c', '"')
 
     defns.append({
     'examples': [clean(x.text) for x in soup.select("div#example-sentences div p")],
@@ -128,7 +128,7 @@ class Word:
         options = [relevance, length, complexity, form]
         temp_options = list(options)
         made_changes = False
-        for x in range(0, len(options)):
+        for x in xrange(0, len(options)):
             # turn all of our inputs into list forms of said input.
             if type(options[x]) != list:
                 options[x] = [options[x]]
@@ -141,13 +141,13 @@ class Word:
             # returns the relevant data (aka not the word) for tuple entries
             f = lambda x: [x[1:][z] for z in optIdx] == [options[z] for z in optIdx]
 
-            for x in range(0, len(self.data)):
+            for x in xrange(0, len(self.data)):
                 # remember: tuple key is (word, relevance, length, complexity,
                 # form)
                 if (partOfSpeech == None) or (self.data[x]['partOfSpeech'] == partOfSpeech):
                     fdata.append({
-                        'syn': [y for y in self.data[x]['syn'] if f(y)],
-                        'ant': [y for y in self.data[x]['ant'] if f(y)]
+                        'syn': filter(lambda y: f(y), self.data[x]['syn']),
+                        'ant': filter(lambda y: f(y), self.data[x]['ant'])
                     })
                 else:
                     continue
@@ -159,7 +159,7 @@ class Word:
         options = [options[z] for z in optIdx]
 
         # tuple key is (word, relevance, length, complexity, form)
-        for x in range(startRange, endRange):
+        for x in xrange(startRange, endRange):
             # iterate through definitions
             if (partOfSpeech != None) and (self.data[x]['partOfSpeech'] not in partOfSpeech):
                 fdata.append({})
@@ -170,7 +170,7 @@ class Word:
             for entry_type in ['syn', 'ant']:
                 c_def = self.data[x]
 
-                for y in range(0, len(c_def[entry_type])):
+                for y in xrange(0, len(c_def[entry_type])):
                     # iterate through synonym entries
                     word = [c_def[entry_type][y][1:][yy] for yy in optIdx]
                     z, zz = 0, len(word)
@@ -195,9 +195,10 @@ class Word:
     accordingly: relevance, partOfSpeech, length, complexity, form.
     """
     def synonyms(self,defnNum=0,allowEmpty=True,**filters):
-        data = [x['syn'] if 'syn' in x else [] for x in self.filter(defnNum=defnNum, filters=filters)]
+        data = map(lambda x: x['syn'] if 'syn' in x else [],
+            self.filter(defnNum=defnNum, filters=filters))
 
-        data = [[y[0] for y in x] for x in data]
+        data = map(lambda x: map(lambda y: y[0], x), data)
 
         if defnNum != 'all':
             return data[0]
@@ -205,12 +206,13 @@ class Word:
             if allowEmpty == True:
                 return data
             else:
-                return [x for x in data if len(x) is not 0]
+                return filter(lambda x: len(x) is not 0, data)
 
     def antonyms(self,defnNum=0,allowEmpty=True,**filters):
-        data = [x['ant'] if 'ant' in x else [] for x in self.filter(defnNum=defnNum, filters=filters)]
+        data = map(lambda x: x['ant'] if 'ant' in x else [],
+            self.filter(defnNum=defnNum, filters=filters))
 
-        data = [[y[0] for y in x] for x in data]
+        data = map(lambda x: map(lambda y: y[0], x), data)
 
         if defnNum != 'all':
             return data[0]
@@ -218,7 +220,7 @@ class Word:
             if allowEmpty == True:
                 return data
             else:
-                return [x for x in data if len(x) is not 0]
+                return filter(lambda x: len(x) is not 0, data)
 
     def origin(self):
         return self.extra['origin']
