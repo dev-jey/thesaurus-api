@@ -81,7 +81,7 @@ def fetchWordData(inputWord):
     'examples': [clean(x.text) for x in soup.select("div#example-sentences div p")],
 
     # TODO: fix this, as there is a '...' that appears. Use span.oneClick-link
-    'origin': origin[0] if len(origin) != 0 else []
+    'origin': origin[0] if len(origin) > 0 else ''
     })
 
     return defns
