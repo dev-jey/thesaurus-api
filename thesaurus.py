@@ -75,12 +75,13 @@ def fetchWordData(inputWord):
 
     # add origin and examples to the last element so we can .pop() it out later
     clean = lambda x: x.strip().replace('\u201d', '"').replace('\u201c', '"')
+    origin = [clean(x.text) for x in soup.select("div#word-origin div p")]
 
     defns.append({
     'examples': [clean(x.text) for x in soup.select("div#example-sentences div p")],
 
     # TODO: fix this, as there is a '...' that appears. Use span.oneClick-link
-    'origin': [clean(x.text) for x in soup.select("div#word-origin div p")][0]
+    'origin': origin[0] if len(origin) != 0 else []
     })
 
     return defns
