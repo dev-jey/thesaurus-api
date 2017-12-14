@@ -25,9 +25,9 @@ Then, install its dependencies.
 
 Next, navigate to its directory and launch python. 
 
-```fish
-Prog λ cd thesaurus-api/
-thesaurus-api:master* λ python
+```bash
+$ cd thesaurus-api/
+$ python
 ```
 
 In python, the syntax is fairly simple. You begin by importing and creating a `Word` class.  
