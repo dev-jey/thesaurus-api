@@ -242,3 +242,5 @@ To [James](https://github.com/jaykm/) for the idea to just use rstrip() instead 
 To [Kyle](https://github.com/AFishNamedFish) for his interest in this project. You rock, Kyle.
 
 To [Stefano](https://github.com/stefano-bragaglia) for suggesting that I add filtering to function output.
+
+To [Suhas](https://github.com/syelluru) for correcting my errors.

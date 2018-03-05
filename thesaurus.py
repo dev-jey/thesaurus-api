@@ -102,6 +102,8 @@ class Word:
         """filter out our self.data to reflect only what we need/want in
         different functions
         """
+        if len(self) == 0:
+            return []
 
         # here are the available filters that we will pull out of the args.
         relevance = getFilter('relevance', filters)
@@ -198,6 +200,10 @@ class Word:
     def synonyms(self,defnNum=0,allowEmpty=True,**filters):
         data = [x['syn'] if 'syn' in x else [] for x in self.filter(defnNum=defnNum, filters=filters)]
 
+        # the word does not exist. return empty.
+        if not data:
+            return []
+        
         data = [[y[0] for y in x] for x in data]
 
         if defnNum != 'all':
@@ -211,6 +217,10 @@ class Word:
     def antonyms(self,defnNum=0,allowEmpty=True,**filters):
         data = [x['ant'] if 'ant' in x else [] for x in self.filter(defnNum=defnNum, filters=filters)]
 
+        # word does not exist. return empty.
+        if not data:
+            return []
+        
         data = [[y[0] for y in x] for x in data]
 
         if defnNum != 'all':
